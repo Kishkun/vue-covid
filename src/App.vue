@@ -49,11 +49,13 @@
         </template>
         <v-list>
           <v-list-item
-              v-for="n in 5"
-              :key="n"
+              v-for="country in countries"
+              :key="country"
               @click="() => {}"
+              link
+              :to="'/country/' + country"
           >
-            <v-list-item-title>Country {{ n }}</v-list-item-title>
+            <v-list-item-title @click="updateCountry(country)">{{ country }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -80,5 +82,18 @@
       ],
       drawer: false
     }),
+    mounted() {
+      this.$store.dispatch("updateTopCountries")
+    },
+    methods: {
+      updateCountry(country) {
+        this.$store.dispatch("newCountryName", country)
+      }
+    },
+    computed: {
+      countries() {
+        return this.$store.getters.topCountries
+      }
+    }
   };
 </script>

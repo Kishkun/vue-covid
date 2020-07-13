@@ -18,7 +18,7 @@
       </section>
       <section>
         <h2 class="display-1">Visuals</h2>
-        <v-row class="ma-10" align="center" justify="center">
+        <v-row class="ma-5" align="center" justify="center">
           <LineChart
               v-for="(visual, index) in visuals"
               :key="index"
@@ -69,6 +69,7 @@
       visuals: [],
       continents: null,
       allData: null,
+      countryInfo: false,
       isLoading: true
     }),
     mounted() {
@@ -171,6 +172,52 @@
         this.cards[0].amountNew += lastDayCases;
         this.cards[1].amountNew += lastDayDeaths;
         this.cards[2].amountNew += lastDayRecoveries;
+      },
+      updateCountryStats () {
+        this.countryInfo = true;
+        let data = this.$store.getters.country;
+        this.cards[0].amount = data.cases;
+        this.cards[1].amount = data.deaths;
+        this.cards[2].amount = data.recoveries;
+        this.visuals = [];
+        this.visuals.push({
+          id: 1,
+          chartData: {
+            labels: data.visualLabels,
+            datasets: [{
+              label: 'Total cases',
+              backgroundColor: '#6aaaff',
+              data: data.visualData.cases
+            }]
+          }
+        });
+        this.visuals.push({
+          id: 2,
+          chartData: {
+            labels: data.visualLabels,
+            datasets: [{
+              label: 'Deaths',
+              backgroundColor: '#ff5252',
+              data: data.visualData.deatha
+            }]
+          }
+        });
+        this.visuals.push({
+          id: 3,
+          chartData: {
+            labels: data.visualLabels,
+            datasets: [{
+              label: 'recoveries',
+              backgroundColor: '#26a69a',
+              data: data.visualData.recoveries
+            }]
+          }
+        })
+      }
+    },
+    watch: {
+      currentCountry () {
+        return this.$store.getters.currentCountry
       }
     }
   }
